@@ -1,7 +1,7 @@
 import { join } from 'path';
 import Emitter from 'events';
-import { StatusCodes } from 'node-opcua/lib/datamodel/opcua_status_code';
-import { OPCUAClient, ClientSession } from 'node-opcua/lib/client/opcua_client';
+import { StatusCodes } from 'node-opcua';
+import { OPCUAClient, ClientSession } from 'node-opcua';
 import Logger from 'gulplog';
 import ProjectConfig from '../../config/ProjectConfig';
 import { promisified } from '../helpers/async';
@@ -35,6 +35,7 @@ export default class Session {
       keepSessionAlive: true,
       certificateFile: join(__dirname, '../../../res/certificates/certificate.pem'),
       privateKeyFile: join(__dirname, '../../../res/certificates/key.pem'),
+      endpoint_must_exist: false
     });
 
     const endpoint = `opc.tcp://${ProjectConfig.host}:${ProjectConfig.port.opc}`;

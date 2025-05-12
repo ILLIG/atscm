@@ -1,5 +1,5 @@
 import Logger from 'gulplog';
-import { DataType, VariantArrayType } from 'node-opcua/lib/datamodel/variant';
+import { DataType, VariantArrayType } from 'node-opcua';
 import {
   findChild,
   findChildren,

@@ -1,6 +1,6 @@
 import { basename } from 'path';
 import assert from 'assert';
-import { VariantArrayType, DataType } from 'node-opcua/lib/datamodel/variant';
+import { VariantArrayType, DataType } from 'node-opcua';
 import Transformer from '../lib/transform/Transformer';
 
 /**

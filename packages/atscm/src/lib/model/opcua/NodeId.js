@@ -1,5 +1,5 @@
 import { sep } from 'path';
-import { NodeId as OpcNodeId } from 'node-opcua/lib/datamodel/nodeid';
+import { NodeId as OpcNodeId } from 'node-opcua';
 
 /**
  * OPC-UA node id types.

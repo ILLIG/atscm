@@ -1,8 +1,7 @@
-import { NodeClass } from 'node-opcua/lib/datamodel/nodeclass';
-import { DataType, VariantArrayType } from 'node-opcua/lib/datamodel/variant';
-import { StatusCodes } from 'node-opcua/lib/datamodel/opcua_status_code';
+
 import Session from './lib/server/Session';
 import NodeId from './lib/model/opcua/NodeId';
+import { DataType, NodeClass, StatusCodes, VariantArrayType } from 'node-opcua';
 
 // Helpers
 /**
@@ -38,19 +37,25 @@ function promisified(call) {
  * @param {function(session: Session): Promise<any>} action The action to run a session.
  */
 async function withSession(action) {
-  const session = await Session.create();
   let result = null;
   let error = null;
+  let session;
+  
+  if (global.atscmSession) {
+    session = global.atscmSession;
+  } else {
+    session = await Session.default.create();
+    global.atscmSession = session;
+  }
+
   try {
     result = await action(session);
   } catch (e) {
     error = e;
   }
 
-  await Session.close(session);
-
   if (error) {
-    throw error;
+    throw etes;
   }
 
   return result;
@@ -236,7 +241,9 @@ export function createNode(
     const [{ value: createdNode }] = result.outputArguments[3].value;
 
     if (createdNode && is64Bit) {
+      console.warn("before write");
       await writeNode(nodeId, value);
+      console.warn("after write");
     }
 
     return result;

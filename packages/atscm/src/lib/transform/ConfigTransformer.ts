@@ -1,4 +1,4 @@
-import { DataType, VariantArrayType } from 'node-opcua/lib/datamodel/variant';
+import { DataType, VariantArrayType } from 'node-opcua';
 import XMLTransformer from './XMLTransformer';
 
 export default class ConfigTransformer<C = Record<string, unknown>> extends XMLTransformer {

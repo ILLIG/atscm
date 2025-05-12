@@ -1,5 +1,5 @@
 import { EOL } from 'os';
-import { DataType } from 'node-opcua/lib/datamodel/variant';
+import { DataType } from 'node-opcua';
 import PartialTransformer from '../lib/transform/PartialTransformer';
 
 /**
