@@ -1,0 +1,1 @@
+{"version":3,"file":"sane.js","names":[],"sources":["../../../src/typedef/external/sane.js"],"sourcesContent":["/**\r\n * @external {sane~Watcher} https://github.com/amasad/sane\r\n */\r\n"],"mappings":"AAAA;AACA;AACA;AAFA","ignoreList":[]}

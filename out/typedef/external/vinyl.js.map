@@ -1,0 +1,1 @@
+{"version":3,"file":"vinyl.js","names":[],"sources":["../../../src/typedef/external/vinyl.js"],"sourcesContent":["/**\r\n * @external {vinyl~File} https://github.com/gulpjs/vinyl#new-vinyloptions\r\n */\r\n"],"mappings":"AAAA;AACA;AACA;AAFA","ignoreList":[]}

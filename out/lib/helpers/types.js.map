@@ -1,0 +1,1 @@
+{"version":3,"file":"types.js","names":[],"sources":["../../../src/lib/helpers/types.ts"],"sourcesContent":["export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;\r\nexport type ValueOf<T> = T[keyof T];\r\n"],"mappings":"","ignoreList":[]}
