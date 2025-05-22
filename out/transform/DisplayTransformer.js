@@ -75,10 +75,6 @@ class DisplayTransformer extends _ConfigTransformer.default {
     if (!this.shouldBeTransformed(node)) {
       return undefined;
     }
-    if (node.arrayType !== _nodeOpcua.VariantArrayType.Scalar) {
-      // FIXME: Instead of throwing we could simply pass the original node to the callback
-      throw new Error('Array of displays not supported');
-    }
     const xml = this.decodeContents(node);
     if (!xml) {
       throw new Error('Error parsing display');

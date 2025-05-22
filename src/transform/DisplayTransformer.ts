@@ -80,11 +80,6 @@ export default class DisplayTransformer extends ConfigTransformer<DisplayConfig>
       return undefined;
     }
 
-    if (node.arrayType !== VariantArrayType.Scalar) {
-      // FIXME: Instead of throwing we could simply pass the original node to the callback
-      throw new Error('Array of displays not supported');
-    }
-
     const xml = this.decodeContents(node);
     if (!xml) {
       throw new Error('Error parsing display');

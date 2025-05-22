@@ -3,7 +3,7 @@ import detectIndent from 'detect-indent';
 
 type UpdateFn<T = string> = (current: T) => T | Promise<T>;
 
-export async function updateFile(path: string, update: UpdateFn, encoding = 'utf8'): Promise<void> {
+export async function updateFile(path: string, update: UpdateFn, encoding: BufferEncoding = 'utf8'): Promise<void> {
   const contents = await readFile(path, encoding);
   const updated = await update(contents);
 

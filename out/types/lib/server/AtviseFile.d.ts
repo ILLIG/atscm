@@ -15,7 +15,7 @@ export const DataTypeForExtension: Map<string, node>;
  * @property {NodeId} typeDefinition The file's type definition on atvise server.
  * FIXME: Additional properties not showing in API docs.
  */
-export default class AtviseFile {
+export default class AtviseFile extends File.NullFile {
     /**
      * Returns a storage path for a {@link ReadStream.ReadResult}.
      * @param {ReadStream.ReadResult} readResult The read result to get a path for.
@@ -149,11 +149,6 @@ export default class AtviseFile {
      */
     get value(): any | null;
     /**
-     * The file's contents.
-     * @type {?Buffer}
-     */
-    contents: Buffer | null;
-    /**
      * Returns the decoded node value for create node serverscript.
      * @type {?*} The file's decoded value.
      */
@@ -181,4 +176,5 @@ export default class AtviseFile {
      */
     clone(options: any): AtviseFile;
 }
+import File from 'vinyl';
 import NodeId from '../model/opcua/NodeId';
