@@ -1,6 +1,6 @@
 {
   "name": "atscm",
-  "version": "1.5.5",
+  "version": "1.5.6",
   "description": "Source code management utilities for atvise",
   "license": "MIT",
   "repository": {
@@ -55,7 +55,7 @@
     "modify-xml": "^1.0.0-beta.0",
     "mri": "^1.1.4",
     "node-cleanup": "^2.1.2",
-    "node-opcua": "^0.5.5",
+    "node-opcua": "^2.153.0",
     "p-queue": "^6.2.1",
     "prompts": "^2.3.2",
     "sane": "^2.5.2",
