@@ -3,10 +3,11 @@
     "allowJs": true,
     "target": "es2020",
     "strict": false,
-    "moduleResolution": "node",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
-    "lib": ["es2020"],
+    "lib": ["ES2020", "DOM"],
     "declaration": true,
     "emitDeclarationOnly": true,
     "declarationDir": "out/types"
