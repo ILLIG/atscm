@@ -27,9 +27,9 @@ export default class SplittingTransformer extends PartialTransformer {
 
   /**
    * Splits a {@link Node}: The resulting is a clone of the input file, with a different path.
-   * @param {Node} node The file to split.
+   * @param {BrowsedNode} node The file to split.
    * @param {?string} newExtension The extension the resulting file gets.
-   * @return {Node} The resulting node.
+   * @return {BrowsedNode} The resulting node.
    */
   static splitFile(node, newExtension) {
     Object.assign(node, {

@@ -38,7 +38,7 @@ export default class NodeId extends OpcNodeId {
    * @param {number} [namespace=1] The namespace to use.
    */
   constructor(typeOrValue, value, namespace = 1) {
-    if (!Type.get(typeOrValue)) {
+    if (!(typeOrValue in Type) && typeof typeOrValue !== 'number') {
       let m = null;
 
       if (typeof typeOrValue === 'string') {

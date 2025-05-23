@@ -43,7 +43,7 @@ class NodeId extends _nodeOpcua.NodeId {
    * @param {number} [namespace=1] The namespace to use.
    */
   constructor(typeOrValue, value, namespace = 1) {
-    if (!Type.get(typeOrValue)) {
+    if (!(typeOrValue in Type) && typeof typeOrValue !== 'number') {
       let m = null;
       if (typeof typeOrValue === 'string') {
         m = typeOrValue.match(/^ns=([0-9]+);(i|s|g|b)=(.*)$/);

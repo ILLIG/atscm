@@ -111,6 +111,7 @@ interface WithValue {
 export interface NodeOptions {
   name: string;
   parent?: Node;
+  value: any;
   nodeClass: ItemOf<typeof NodeClass>;
 }
 
@@ -126,6 +127,8 @@ export default abstract class Node {
   protected idName: string;
   /** The id stored in the definition file. */
   protected specialId?: string;
+
+  public value: any;
 
   /** The node's parent node. */
   public readonly parent?: Node;
@@ -152,11 +155,12 @@ export default abstract class Node {
    * @param {Node} options.parent The node's parent node.
    * @param {node-opcua~NodeClass} options.nodeClass The node's class.
    */
-  public constructor({ name, parent, nodeClass /* , referenceToParent */ }: NodeOptions) {
+  public constructor({ name, parent, nodeClass /* , referenceToParent */, value }: NodeOptions) {
     this.fileName = name;
     this.idName = name;
     this.parent = parent;
     this.nodeClass = nodeClass;
+    this.value = value;
 
     this._unresolved = new Set([
       'nodeClass',
