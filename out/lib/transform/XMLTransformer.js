@@ -107,7 +107,7 @@ class XMLTransformer extends _SplittingTransformer.default {
 
   /**
    * Parses XML in a node's contents.
-   * @param {Node | BrowsedNode} node The node to process.
+   * @param {Node} node The node to process.
    */
   decodeContents(node) {
     const rawLines = this.direction === _Transformer.TransformDirection.FromDB ? node.value.value.toString() : node.stringValue;

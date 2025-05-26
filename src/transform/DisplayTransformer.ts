@@ -125,11 +125,9 @@ export default class DisplayTransformer extends ConfigTransformer<DisplayConfig>
           });
         } else if (inlineScript) {
           // Warn on multiple inline scripts
-          if (typeof node.id.value === 'string' && node.id.value.startsWith('SYSTEM.LIBRARY.ATVISE')) {
-            Logger.debug(`Node ID: ${node.id.value} contains multiple inline scripts.`);
-          } else {
-            Logger.warn(`Node ID: ${node.id.value} contains multiple inline scripts.`);
-          }
+           Logger[node.id.value.startsWith('SYSTEM.LIBRARY.ATVISE') ? 'debug' : 'warn'](
+            `'${node.id.value}' contains multiple inline scripts.`
+          );
           document.childNodes.push(inlineScript);
         } else if (textContent(script)) {
           // Inline script
