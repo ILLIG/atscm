@@ -33,9 +33,9 @@ export default class XMLTransformer extends SplittingTransformer {
     get builder(): (arg0: object) => any;
     /**
      * Parses XML in a node's contents.
-     * @param {Node} node The node to process.
+     * @param {Node | BrowsedNode} node The node to process.
      */
-    decodeContents(node: Node): import("modify-xml").Document;
+    decodeContents(node: Node | BrowsedNode): import("modify-xml").Document;
     /**
      * Builds an XML string from an object.
      * @param {Object} object The object to encode.

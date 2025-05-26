@@ -117,7 +117,11 @@ class DisplayTransformer extends _ConfigTransformer.default {
           }, normalized));
         } else if (inlineScript) {
           // Warn on multiple inline scripts
-          _gulplog.default[node.id.value.startsWith('SYSTEM.LIBRARY.ATVISE') ? 'debug' : 'warn'](`'${node.id.value}' contains multiple inline scripts.`);
+          if (typeof node.id.value === 'string' && node.id.value.startsWith('SYSTEM.LIBRARY.ATVISE')) {
+            _gulplog.default.debug(`Node ID: ${node.id.value} contains multiple inline scripts.`);
+          } else {
+            _gulplog.default.warn(`Node ID: ${node.id.value} contains multiple inline scripts.`);
+          }
           document.childNodes.push(inlineScript);
         } else if ((0, _modifyXml.textContent)(script)) {
           // Inline script

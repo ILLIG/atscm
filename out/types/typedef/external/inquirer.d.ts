@@ -1,4 +1,4 @@
 /**
  * ~PromptType
  */
-type inquirer = string;
+export type inquirer = string;

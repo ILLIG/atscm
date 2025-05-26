@@ -101,7 +101,7 @@ export default class XMLTransformer extends SplittingTransformer {
 
   /**
    * Parses XML in a node's contents.
-   * @param {Node} node The node to process.
+   * @param {Node | BrowsedNode} node The node to process.
    */
   decodeContents(node) {
     const rawLines =

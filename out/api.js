@@ -53,7 +53,7 @@ async function withSession(action) {
   if (global.atscmSession) {
     session = global.atscmSession;
   } else {
-    session = await _Session.default.create();
+    session = await _Session.default.default.create();
     global.atscmSession = session;
   }
   try {

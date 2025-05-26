@@ -1,4 +1,4 @@
-declare namespace NodeStream {
+export namespace NodeStream {
     type BrowseResult = {
         /**
          * The discovered node's id.
@@ -15,6 +15,6 @@ declare namespace NodeStream {
         references: Map<string, NodeId[]>;
     };
 }
-declare namespace ReadStream {
+export namespace ReadStream {
     type ReadResult = NodeStream.BrowseResult;
 }
