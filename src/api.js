@@ -1,7 +1,7 @@
 
 import Session from './lib/server/Session';
 import NodeId from './lib/model/opcua/NodeId';
-import { DataType, NodeClass, StatusCodes, VariantArrayType } from 'node-opcua';
+import { coerceNodeId, DataType, NodeClass, StatusCodes, VariantArrayType } from 'node-opcua';
 
 // Helpers
 /**
@@ -44,7 +44,7 @@ async function withSession(action) {
   if (global.atscmSession) {
     session = global.atscmSession;
   } else {
-    session = await Session.default.create();
+    session = await Session.create();
     global.atscmSession = session;
   }
 
@@ -196,54 +196,62 @@ export function createNode(
     name,
     parentNodeId = nodeId.parent,
     nodeClass = NodeClass.Variable,
-    typeDefinition = new NodeId('ns=0;i=62'),
+    typeDefinition = coerceNodeId("ns=0;i=62"),
     modellingRule,
     reference,
     value,
   }
 ) {
-  const variableOptions =
-    nodeClass.value === NodeClass.Variable.value
-      ? {
-          dataType: value.dataType.value,
-          valueRank: value.arrayType ? value.arrayType.value : VariantArrayType.Scalar.value,
-          value:
-            value.arrayType && value.arrayType.value !== VariantArrayType.Scalar.value
-              ? Array.from(value.value)
-              : value.value,
-        }
-      : {};
+  nodeId = coerceNodeId(nodeId);
+  parentNodeId = coerceNodeId(parentNodeId || nodeId.parent);
 
-  const is64Bit = value.dataType === DataType.Int64 || value.dataType === DataType.UInt64;
+  const isVariable = nodeClass === NodeClass.Variable;
+  const is64Bit =
+    value?.dataType === DataType.Int64 ||
+    value?.dataType === DataType.UInt64;
+
+  const variableOptions = isVariable
+    ? {
+        dataType: value.dataType,
+        valueRank:
+          value.arrayType ?? VariantArrayType.Scalar,
+        value:
+          value.arrayType &&
+          value.arrayType !== VariantArrayType.Scalar
+            ? Array.from(value.value)
+            : value.value,
+      }
+    : {};
+
   if (is64Bit) {
-    variableOptions.value = 0;
+    variableOptions.value = 0; // placeholder value
   }
 
-  return callScript(new NodeId('SYSTEM.LIBRARY.ATVISE.SERVERSCRIPTS.atscm.CreateNode'), {
-    paramObjString: {
-      dataType: DataType.String,
-      value: JSON.stringify(
-        Object.assign(
-          {
-            nodeId,
-            browseName: name,
-            parentNodeId: parentNodeId || nodeId.parent,
-            nodeClass: nodeClass.value,
-            typeDefinition,
-            modellingRule,
-            reference,
-          },
-          variableOptions
-        )
-      ),
-    },
-  }).then(async (result) => {
-    const [{ value: createdNode }] = result.outputArguments[3].value;
+  const paramObj = {
+    nodeId,
+    browseName: name,
+    parentNodeId,
+    nodeClass,
+    typeDefinition,
+    modellingRule,
+    reference,
+    ...variableOptions,
+  };
+
+  return callScript(
+    new NodeId("SYSTEM.LIBRARY.ATVISE.SERVERSCRIPTS.atscm.CreateNode"),
+    {
+      paramObjString: {
+        dataType: DataType.String,
+        value: JSON.stringify(paramObj),
+      },
+    }
+  ).then(async (result) => {
+    const createdNode = result.outputArguments?.[3]?.value?.[0]?.value;
 
     if (createdNode && is64Bit) {
-      console.warn("before write");
+      console.warn("Writing actual 64-bit value after creation...");
       await writeNode(nodeId, value);
-      console.warn("after write");
     }
 
     return result;

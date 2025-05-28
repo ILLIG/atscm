@@ -13,6 +13,11 @@ var _Session = _interopRequireDefault(require("./lib/server/Session"));
 var _NodeId = _interopRequireDefault(require("./lib/model/opcua/NodeId"));
 var _nodeOpcua = require("node-opcua");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 // Helpers
 /**
  * Creates a callback that calls `resolve` on success and `reject` on error.
@@ -183,41 +188,44 @@ function createNode(nodeId, {
   name,
   parentNodeId = nodeId.parent,
   nodeClass = _nodeOpcua.NodeClass.Variable,
-  typeDefinition = new _NodeId.default('ns=0;i=62'),
+  typeDefinition = (0, _nodeOpcua.coerceNodeId)("ns=0;i=62"),
   modellingRule,
   reference,
   value
 }) {
-  const variableOptions = nodeClass.value === _nodeOpcua.NodeClass.Variable.value ? {
-    dataType: value.dataType.value,
-    valueRank: value.arrayType ? value.arrayType.value : _nodeOpcua.VariantArrayType.Scalar.value,
-    value: value.arrayType && value.arrayType.value !== _nodeOpcua.VariantArrayType.Scalar.value ? Array.from(value.value) : value.value
+  var _value$arrayType;
+  nodeId = (0, _nodeOpcua.coerceNodeId)(nodeId);
+  parentNodeId = (0, _nodeOpcua.coerceNodeId)(parentNodeId || nodeId.parent);
+  const isVariable = nodeClass === _nodeOpcua.NodeClass.Variable;
+  const is64Bit = (value === null || value === void 0 ? void 0 : value.dataType) === _nodeOpcua.DataType.Int64 || (value === null || value === void 0 ? void 0 : value.dataType) === _nodeOpcua.DataType.UInt64;
+  const variableOptions = isVariable ? {
+    dataType: value.dataType,
+    valueRank: (_value$arrayType = value.arrayType) !== null && _value$arrayType !== void 0 ? _value$arrayType : _nodeOpcua.VariantArrayType.Scalar,
+    value: value.arrayType && value.arrayType !== _nodeOpcua.VariantArrayType.Scalar ? Array.from(value.value) : value.value
   } : {};
-  const is64Bit = value.dataType === _nodeOpcua.DataType.Int64 || value.dataType === _nodeOpcua.DataType.UInt64;
   if (is64Bit) {
-    variableOptions.value = 0;
+    variableOptions.value = 0; // placeholder value
   }
-  return callScript(new _NodeId.default('SYSTEM.LIBRARY.ATVISE.SERVERSCRIPTS.atscm.CreateNode'), {
+  const paramObj = _objectSpread({
+    nodeId,
+    browseName: name,
+    parentNodeId,
+    nodeClass,
+    typeDefinition,
+    modellingRule,
+    reference
+  }, variableOptions);
+  return callScript(new _NodeId.default("SYSTEM.LIBRARY.ATVISE.SERVERSCRIPTS.atscm.CreateNode"), {
     paramObjString: {
       dataType: _nodeOpcua.DataType.String,
-      value: JSON.stringify(Object.assign({
-        nodeId,
-        browseName: name,
-        parentNodeId: parentNodeId || nodeId.parent,
-        nodeClass: nodeClass.value,
-        typeDefinition,
-        modellingRule,
-        reference
-      }, variableOptions))
+      value: JSON.stringify(paramObj)
     }
   }).then(async result => {
-    const [{
-      value: createdNode
-    }] = result.outputArguments[3].value;
+    var _result$outputArgumen, _result$outputArgumen2, _result$outputArgumen3, _result$outputArgumen4;
+    const createdNode = (_result$outputArgumen = result.outputArguments) === null || _result$outputArgumen === void 0 ? void 0 : (_result$outputArgumen2 = _result$outputArgumen[3]) === null || _result$outputArgumen2 === void 0 ? void 0 : (_result$outputArgumen3 = _result$outputArgumen2.value) === null || _result$outputArgumen3 === void 0 ? void 0 : (_result$outputArgumen4 = _result$outputArgumen3[0]) === null || _result$outputArgumen4 === void 0 ? void 0 : _result$outputArgumen4.value;
     if (createdNode && is64Bit) {
-      console.warn("before write");
+      console.warn("Writing actual 64-bit value after creation...");
       await writeNode(nodeId, value);
-      console.warn("after write");
     }
     return result;
   });

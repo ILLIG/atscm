@@ -35,7 +35,7 @@ class Session {
    * {@link node-opcua~ClientSession}.
    */
   static async _create() {
-    const client = new _nodeOpcua.OPCUAClient({
+    const client = _nodeOpcua.OPCUAClient.create({
       requestedSessionTimeout: 600000,
       keepSessionAlive: true,
       certificateFile: (0, _path.join)(__dirname, '../../../res/certificates/certificate.pem'),
